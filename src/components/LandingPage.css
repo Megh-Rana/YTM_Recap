@@ -1,0 +1,228 @@
+.landing-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Clean background - no orbs */
+.bg-orb {
+    display: none;
+}
+
+.landing-content {
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlideUp 0.6s ease-out;
+}
+
+.landing-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logo-mark {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-mark svg {
+    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.25));
+}
+
+.landing-title {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 0.6rem;
+    letter-spacing: -0.02em;
+}
+
+.landing-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.landing-privacy {
+    font-size: 0.85rem;
+    color: var(--accent-secondary);
+    opacity: 0.8;
+}
+
+/* Drop zone */
+.drop-zone {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px dashed rgba(139, 92, 246, 0.25);
+    border-radius: 1.5rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.drop-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.drop-zone:hover {
+    border-color: rgba(139, 92, 246, 0.45);
+    background: rgba(139, 92, 246, 0.04);
+}
+
+.drop-zone:hover::before {
+    opacity: 1;
+}
+
+.drop-zone-active {
+    border-color: var(--accent-primary) !important;
+    background: rgba(139, 92, 246, 0.08) !important;
+    transform: scale(1.01);
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+}
+
+.drop-zone-icon {
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+    position: relative;
+    animation: subtleBounce 2.5s ease-in-out infinite;
+}
+
+@keyframes subtleBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.drop-zone-text {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    position: relative;
+}
+
+.drop-zone-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    position: relative;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+/* Processing state */
+.processing-state {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.5rem;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.processing-spinner {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.spinner-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid transparent;
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spinnerRotate 1s linear infinite;
+}
+
+.spinner-ring-2 {
+    inset: 8px;
+    border-top-color: var(--accent-tertiary);
+    animation-direction: reverse;
+    animation-duration: 0.7s;
+}
+
+@keyframes spinnerRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.processing-text {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* Instructions */
+.landing-instructions {
+    margin-top: 2.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+}
+
+.landing-instructions h3 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.8rem;
+}
+
+.landing-instructions ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.landing-instructions a {
+    color: var(--accent-secondary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.landing-instructions a:hover {
+    text-decoration: underline;
+}
+
+.landing-instructions strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}

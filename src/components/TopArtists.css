@@ -1,0 +1,116 @@
+.top-artists {
+    animation: fadeSlideUp 0.6s ease-out 0.1s both;
+}
+
+.artists-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.artist-row {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 6rem 3rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    animation: fadeSlideUp 0.4s ease-out both;
+}
+
+.artist-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(59, 130, 246, 0.15);
+    transform: translateX(4px);
+}
+
+.artist-rank {
+    text-align: center;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a1a;
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+    color: #1a1a1a;
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #B87333);
+    color: #1a1a1a;
+}
+
+.rank-number {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.artist-info {
+    min-width: 0;
+}
+
+.artist-name {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.artist-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+}
+
+.artist-bar-container {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.artist-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-secondary), var(--accent-quaternary));
+    border-radius: 3px;
+    transition: width 1s ease-out;
+}
+
+.artist-plays {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+    text-align: right;
+}
+
+@media (max-width: 640px) {
+    .artist-row {
+        grid-template-columns: 2rem 1fr 3rem;
+    }
+
+    .artist-bar-container {
+        display: none;
+    }
+}
