@@ -2,7 +2,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; color-scheme: light; }
 body {
   font-family: 'Rubik', system-ui, sans-serif;
   min-height: 100vh;
