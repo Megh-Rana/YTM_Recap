@@ -1,11 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import LandingPage from './components/LandingPage';
 import RecapDashboard from './components/RecapDashboard';
 import { extractTakeoutZip } from './utils/zipExtractor';
 import { parseWatchHistory, parseMusicLibrary, enrichWithLibrary } from './utils/dataParser';
 import { getTopVideoIds } from './utils/statsEngine';
 import { fetchDurations } from './utils/durationFetcher';
-import './App.css';
+import { ThemeContext, lightPalette, darkPalette } from './theme';
+import './index.css';
 
 function App() {
   const [entries, setEntries] = useState(null);
@@ -13,22 +14,25 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState('');
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState('light');
+
+  const themeCtx = useMemo(() => ({
+    mode,
+    toggle: () => setMode(m => m === 'light' ? 'dark' : 'light'),
+    p: mode === 'light' ? lightPalette : darkPalette,
+  }), [mode]);
 
   const handleFileSelected = useCallback(async (file) => {
     setIsProcessing(true);
     setError(null);
-
     try {
-      // Step 1: Extract ZIP
       setProgress('Extracting ZIP archive...');
       const rawFiles = await extractTakeoutZip(file);
 
-      // Step 2: Parse watch history
       setProgress('Parsing watch history...');
       await new Promise(r => setTimeout(r, 100));
       let musicEntries = parseWatchHistory(rawFiles.watchHistory);
 
-      // Step 3: Parse music library (if available)
       if (rawFiles.musicLibrary) {
         setProgress('Cross-referencing with music library...');
         await new Promise(r => setTimeout(r, 100));
@@ -36,17 +40,13 @@ function App() {
         musicEntries = enrichWithLibrary(musicEntries, libraryMap);
       }
 
-      // Step 4: Get top video IDs for duration fetching
       setProgress('Fetching real song durations from YouTube...');
       await new Promise(r => setTimeout(r, 100));
       const topIds = getTopVideoIds(musicEntries, 20);
-
-      // Step 5: Fetch real durations for top songs
       const durations = await fetchDurations(topIds, (done, total) => {
         setProgress(`Fetching song durations... (${done}/${total})`);
       });
 
-      // Step 6: Done!
       setProgress('Building your recap...');
       await new Promise(r => setTimeout(r, 300));
       setDurationMap(durations);
@@ -66,27 +66,22 @@ function App() {
     setError(null);
   }, []);
 
-  if (entries) {
-    return <RecapDashboard entries={entries} durationMap={durationMap} onReset={handleReset} />;
-  }
-
   return (
-    <>
-      <LandingPage
-        onFileSelected={handleFileSelected}
-        isProcessing={isProcessing}
-        progress={progress}
-      />
-      {error && (
-        <div className="error-toast">
-          <div className="error-content">
-            <span className="error-icon">⚠️</span>
-            <span>{error}</span>
-            <button className="error-dismiss" onClick={() => setError(null)}>✕</button>
+    <ThemeContext.Provider value={themeCtx}>
+      <div style={{ minHeight: '100vh', background: themeCtx.p.bg }}>
+        {entries ? (
+          <RecapDashboard entries={entries} durationMap={durationMap} onReset={handleReset} />
+        ) : (
+          <LandingPage onFileSelected={handleFileSelected} isProcessing={isProcessing} progress={progress} />
+        )}
+        {error && (
+          <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', background: '#1F1A2E', color: '#fff', padding: '12px 20px', borderRadius: 16, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 20px 40px rgba(0,0,0,0.3)', zIndex: 100, fontFamily: 'Rubik, system-ui, sans-serif', fontSize: 14 }}>
+            <span>⚠️ {error}</span>
+            <button onClick={() => setError(null)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', opacity: 0.7, fontSize: 16 }}>✕</button>
           </div>
-        </div>
-      )}
-    </>
+        )}
+      </div>
+    </ThemeContext.Provider>
   );
 }
 
