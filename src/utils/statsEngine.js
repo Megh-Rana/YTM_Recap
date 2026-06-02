@@ -102,19 +102,29 @@ export function getTopArtists(entries, limit = 10, durationMap = null) {
 
     for (const entry of entries) {
         if (!counts.has(entry.artist)) {
-            counts.set(entry.artist, { plays: 0, minutes: 0 });
+            counts.set(entry.artist, { plays: 0, minutes: 0, songCounts: new Map() });
         }
         const current = counts.get(entry.artist);
         current.plays += 1;
         current.minutes += getSongMinutes(entry.videoId, durationMap);
+        if (entry.videoId) {
+            current.songCounts.set(entry.videoId, (current.songCounts.get(entry.videoId) || 0) + 1);
+        }
     }
 
     return [...counts.entries()]
-        .map(([name, data]) => ({
-            name,
-            plays: data.plays,
-            hours: Math.round((data.minutes / 60) * 10) / 10,
-        }))
+        .map(([name, data]) => {
+            // Pick the most-played videoId for this artist (used as photo fallback)
+            let topVideoId = null;
+            let topCount = 0;
+            data.songCounts.forEach((c, id) => { if (c > topCount) { topCount = c; topVideoId = id; } });
+            return {
+                name,
+                plays: data.plays,
+                hours: Math.round((data.minutes / 60) * 10) / 10,
+                topVideoId,
+            };
+        })
         .sort((a, b) => b.plays - a.plays)
         .slice(0, limit);
 }

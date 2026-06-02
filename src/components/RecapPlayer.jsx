@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Play, Pause, ChevronLeft, ChevronRight, Headphones, Flame, Disc3, Music2, Sparkles } from 'lucide-react';
 import { useTheme } from '../theme';
 import AutoFitText from './AutoFitText';
+import { fetchArtistPhoto, ytThumb } from '../utils/artistPhoto';
 
 const sans = { fontFamily: "Rubik, system-ui, sans-serif" };
 const SLIDE_MS = 5000;
@@ -12,8 +13,17 @@ export default function RecapPlayer({ onClose, stats, topArtists, topSongs, mont
   const [i, setI] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
+  const [artistPhoto, setArtistPhoto] = useState(null);
 
-  const slides = buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, range });
+  // Fetch #1 artist photo
+  useEffect(() => {
+    if (!topArtists[0]) return;
+    fetchArtistPhoto(topArtists[0].name, topArtists[0].topVideoId).then(setArtistPhoto);
+  }, [topArtists]);
+
+  const songPhoto = topSongs[0]?.videoId ? ytThumb(topSongs[0].videoId) : null;
+
+  const slides = buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, range, artistPhoto, songPhoto });
 
   useEffect(() => {
     if (!playing) return;
@@ -119,7 +129,7 @@ function Counter({ to, color, style = {} }) {
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTH_SHORT = ['J','F','M','A','M','J','J','A','S','O','N','D'];
 
-function buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, range }) {
+function buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, range, artistPhoto, songPhoto }) {
   const PASTEL_INK = '#1F1A2E';
   const PASTEL_INK_SOFT = '#5A5468';
   const peakMonthIdx = monthly.indexOf(Math.max(...monthly));
@@ -176,7 +186,9 @@ function buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, 
             <Music2 size={14} /> YOUR #1 ARTIST
           </motion.div>
           <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 140 }}
-            style={{ marginTop: 20, width: 128, height: 128, borderRadius: 24, background: topArtists[0].color, boxShadow: '0 20px 40px -10px rgba(0,0,0,0.18)' }} />
+            style={{ marginTop: 20, width: 128, height: 128, borderRadius: 24, background: topArtists[0].color, overflow: 'hidden', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.18)' }}>
+            {artistPhoto && <img src={artistPhoto} alt={topArtists[0].name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+          </motion.div>
           <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.45 }}
             style={{ marginTop: 24, fontSize: 56, fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 0.98 }}>
             {topArtists[0].name}
@@ -197,16 +209,22 @@ function buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, 
             style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 600, letterSpacing: '0.2em', color: PASTEL_INK_SOFT }}>
             <Disc3 size={14} /> SONG ON REPEAT
           </motion.div>
+          {songPhoto && (
+            <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.15, type: 'spring', stiffness: 140 }}
+              style={{ marginTop: 16, width: 128, height: 96, borderRadius: 16, overflow: 'hidden', boxShadow: '0 16px 36px -10px rgba(0,0,0,0.2)', flexShrink: 0 }}>
+              <img src={songPhoto} alt={topSongs[0].title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </motion.div>
+          )}
           <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
-            style={{ marginTop: 20, color: PASTEL_INK }}>
+            style={{ marginTop: songPhoto ? 16 : 20, color: PASTEL_INK }}>
             <AutoFitText maxFontSize={64} style={{ fontFamily: 'Rubik, system-ui, sans-serif', fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1 }}>
               {topSongs[0].title}
             </AutoFitText>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-            style={{ marginTop: 16, fontSize: 17, fontWeight: 500, color: PASTEL_INK_SOFT }}>{topSongs[0].artist}</motion.div>
+            style={{ marginTop: 12, fontSize: 17, fontWeight: 500, color: PASTEL_INK_SOFT }}>{topSongs[0].artist}</motion.div>
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9 }}
-            style={{ marginTop: 24, alignSelf: 'flex-start', padding: '8px 16px', borderRadius: 999, background: PASTEL_INK, color: '#fff', fontWeight: 600, fontSize: 13 }}>
+            style={{ marginTop: 20, alignSelf: 'flex-start', padding: '8px 16px', borderRadius: 999, background: PASTEL_INK, color: '#fff', fontWeight: 600, fontSize: 13 }}>
             {topSongs[0].plays} plays
           </motion.div>
         </div>

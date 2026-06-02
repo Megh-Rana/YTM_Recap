@@ -102,7 +102,7 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
   const [artistPhotos, setArtistPhotos] = useState({});
   useEffect(() => {
     topArtists.slice(0, 5).forEach(a => {
-      fetchArtistPhoto(a.name).then(url => {
+      fetchArtistPhoto(a.name, a.topVideoId).then(url => {
         if (url) setArtistPhotos(prev => ({ ...prev, [a.name]: url }));
       });
     });
