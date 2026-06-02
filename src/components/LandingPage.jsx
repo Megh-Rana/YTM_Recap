@@ -68,7 +68,7 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
             <div style={{ position: 'absolute', top: 20, left: 24, fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>DROP ZONE</div>
             <div style={{ position: 'absolute', top: 20, right: 24, fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>.ZIP · UP TO 2GB</div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '64px 24px', height: '100%' }}>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '64px 24px' }}>
               {isProcessing ? (
                 <>
                   <motion.div

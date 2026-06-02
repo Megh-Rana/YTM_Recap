@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Play, Music2, Flame, Repeat, Disc3, Headphones, TrendingUp, Sparkles } from 'lucide-react';
 import { useTheme } from '../theme';
@@ -7,6 +7,7 @@ import WaveChart from './WaveChart';
 import YearSelect from './YearSelect';
 import AutoFitText from './AutoFitText';
 import RecapPlayer from './RecapPlayer';
+import { fetchArtistPhoto } from '../utils/artistPhoto';
 import {
   filterByYear, getAvailableYears, getSummaryStats,
   getTopArtists, getTopSongs, getMonthlyBreakdown,
@@ -97,6 +98,16 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
 
   const mostReplayed = topSongs[0];
 
+  // Fetch photos for top 5 artists
+  const [artistPhotos, setArtistPhotos] = useState({});
+  useEffect(() => {
+    topArtists.slice(0, 5).forEach(a => {
+      fetchArtistPhoto(a.name).then(url => {
+        if (url) setArtistPhotos(prev => ({ ...prev, [a.name]: url }));
+      });
+    });
+  }, [topArtists]);
+
   return (
     <div style={{ minHeight: '100vh', width: '100%', background: p.bg, color: p.ink, ...sans }}>
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '20px 40px' }}>
@@ -169,12 +180,15 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {topArtists.map((a, i) => {
                     const pct = (a.plays / (topArtists[0]?.plays || 1)) * 100;
+                    const photo = artistPhotos[a.name];
                     return (
                       <div key={a.name} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <div style={{ width: 28, fontWeight: 600, color: p.inkMute, fontSize: 14, fontVariantNumeric: 'tabular-nums' }}>
                           {String(i + 1).padStart(2, '0')}
                         </div>
-                        <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, background: a.color }} />
+                        <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, background: a.color, overflow: 'hidden' }}>
+                          {photo && <img src={photo} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+                        </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 6 }}>
                             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500, letterSpacing: '-0.015em', fontSize: 15 }}>{a.name}</div>
@@ -214,9 +228,9 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
               </Tile>
             </div>
 
-            {/* Row 3: Top Songs + Stats */}
+            {/* Row 3: Top Songs + Stats + Total Plays */}
             <div style={{ gridColumn: 'span 5' }}>
-              <Tile delay={0.3}>
+              <Tile delay={0.3} style={{ height: '100%' }}>
                 <Label icon={Disc3} text="Top Songs" mute={p.inkSoft} />
                 <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {topSongs.map((s, i) => (
@@ -233,7 +247,7 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
               </Tile>
             </div>
 
-            <div style={{ gridColumn: 'span 3', display: 'grid', gridTemplateRows: '1fr 1fr', gap: 16 }}>
+            <div style={{ gridColumn: 'span 7', display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 16 }}>
               <Tile bg={p.ink} fg={p.bg} delay={0.35}>
                 <Label icon={Disc3} text="Unique Songs" mute={`${p.bg}90`} />
                 <div style={{ marginTop: 12, fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueSongs?.toLocaleString()}</div>
@@ -244,16 +258,18 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
                 <div style={{ marginTop: 12, fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueArtists?.toLocaleString()}</div>
                 <div style={{ fontSize: 12, color: PASTEL_INK_SOFT, marginTop: 8 }}>artists discovered</div>
               </Tile>
-            </div>
-
-            <div style={{ gridColumn: 'span 4' }}>
-              <Tile bg={p.ink} fg={p.bg} delay={0.45} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 180 }}>
-                <Label icon={Music2} text="Total Plays" mute={`${p.bg}80`} />
-                <div>
-                  <div style={{ fontSize: 'clamp(32px, 4vw, 60px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginTop: 16 }}>
+              <Tile bg={p.accentDeep} fg="#fff" delay={0.45} style={{ gridColumn: 'span 2' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Label icon={Music2} text="Total Plays" mute="rgba(255,255,255,0.75)" />
+                  <div style={{ fontSize: 11, opacity: 0.7, letterSpacing: '0.14em', fontWeight: 500 }}>ALL TIME</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 12, flexWrap: 'wrap', gap: 12 }}>
+                  <div style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
                     {stats.totalPlays?.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: 13, opacity: 0.7, marginTop: 8 }}>songs played in {range.toLowerCase()}</div>
+                  <div style={{ fontSize: 13, opacity: 0.8, lineHeight: 1.5, textAlign: 'right' }}>
+                    songs played<br />in {range.toLowerCase()}
+                  </div>
                 </div>
               </Tile>
             </div>

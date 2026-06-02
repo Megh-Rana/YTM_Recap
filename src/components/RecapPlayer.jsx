@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Play, Pause, ChevronLeft, ChevronRight, Headphones, Flame, Disc3, Music2, Sparkles } from 'lucide-react';
 import { useTheme } from '../theme';
+import AutoFitText from './AutoFitText';
 
 const sans = { fontFamily: "Rubik, system-ui, sans-serif" };
 const SLIDE_MS = 5000;
@@ -197,8 +198,10 @@ function buildSlides({ p, stats, topArtists, topSongs, monthly, hourly, streak, 
             <Disc3 size={14} /> SONG ON REPEAT
           </motion.div>
           <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
-            style={{ marginTop: 20, fontSize: 64, fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 0.98 }}>
-            {topSongs[0].title}
+            style={{ marginTop: 20, color: PASTEL_INK }}>
+            <AutoFitText maxFontSize={64} style={{ fontFamily: 'Rubik, system-ui, sans-serif', fontWeight: 600, letterSpacing: '-0.04em', lineHeight: 1 }}>
+              {topSongs[0].title}
+            </AutoFitText>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
             style={{ marginTop: 16, fontSize: 17, fontWeight: 500, color: PASTEL_INK_SOFT }}>{topSongs[0].artist}</motion.div>
