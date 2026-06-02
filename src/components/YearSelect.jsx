@@ -42,7 +42,7 @@ export default function YearSelect({ value, onChange, options }) {
             exit={{ opacity: 0, y: -6, scale: 0.98 }}
             transition={{ duration: 0.16 }}
             style={{
-              position: 'absolute', right: 0, marginTop: 8,
+              position: 'absolute', left: 0, marginTop: 8,
               borderRadius: 16, overflow: 'hidden', zIndex: 30, minWidth: 180,
               background: p.card, border: `1px solid ${p.border}18`,
               boxShadow: `0 20px 50px -12px ${p.shadow}`,

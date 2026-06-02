@@ -5,6 +5,13 @@ import { useTheme } from '../theme';
 import ThemeToggle from './ThemeToggle';
 
 const sans = { fontFamily: "Rubik, system-ui, sans-serif" };
+const INSTRUCTIONS_STYLE = `
+  .instructions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 600px) {
+    .instructions-grid { grid-template-columns: 1fr 1fr; }
+    .instructions-grid > *:last-child { grid-column: 1 / -1; max-width: 50%; margin: 0 auto; width: 100%; }
+  }
+`;
 
 export default function LandingPage({ onFileSelected, isProcessing, progress }) {
   const { p } = useTheme();
@@ -19,6 +26,7 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
 
   return (
     <div style={{ minHeight: '100vh', width: '100%', background: p.bg, color: p.ink, ...sans }}>
+      <style>{INSTRUCTIONS_STYLE}</style>
       <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 20px' }}>
         <div style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(14px, 4vw, 20px)' }}>
           Youtube Music Recap
@@ -108,7 +116,7 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
               <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>HOW TO GET YOUR FILE</div>
               <div style={{ flex: 1, height: 1, background: p.border, opacity: 0.15 }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
+            <div className="instructions-grid">
               {[
                 { n: '01', t: 'Visit Google Takeout', d: 'Go to takeout.google.com and sign in.', c: p.pink },
                 { n: '02', t: 'Select YouTube & export JSON', d: 'Deselect everything else. Choose JSON as the format — not HTML.', c: p.mint, icon: FileJson },
