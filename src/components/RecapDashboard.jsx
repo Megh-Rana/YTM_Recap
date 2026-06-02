@@ -208,7 +208,7 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 4 }}>
-                            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500, fontSize: 13 }}>{a.name}</div>
+                            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500, fontSize: 15 }}>{a.name}</div>
                             <div style={{ fontWeight: 600, fontSize: 12, color: p.inkSoft, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{a.plays}</div>
                           </div>
                           <div style={{ height: 6, borderRadius: 999, overflow: 'hidden', background: p.bgAlt }}>
@@ -255,8 +255,8 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
                     <div key={s.url || i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '2px 0' }}>
                       <div style={{ width: 20, fontWeight: 600, color: p.inkMute, fontSize: 13, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{i + 1}</div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500, fontSize: 13 }}>{s.title}</div>
-                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 11, color: p.inkSoft }}>{s.artist}</div>
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500, fontSize: 15 }}>{s.title}</div>
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: 12, color: p.inkSoft }}>{s.artist}</div>
                       </div>
                       <div style={{ fontWeight: 600, fontSize: 12, color: p.inkSoft, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{s.plays}×</div>
                     </div>
@@ -267,15 +267,15 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
 
             {/* Stats 2x2 + Total Plays */}
             <div className="col-7-stats">
-              <Tile bg={p.ink} fg={p.bg} delay={0.35}>
+              <Tile bg={p.ink} fg={p.bg} delay={0.35} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                 <Label icon={Disc3} text="Unique Songs" mute={`${p.bg}90`} />
-                <div style={{ marginTop: 10, fontSize: 'clamp(24px, 3vw, 44px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueSongs?.toLocaleString()}</div>
-                <div style={{ fontSize: 11, opacity: 0.75, marginTop: 6 }}>tracks played</div>
+                <div style={{ marginTop: 10, fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueSongs?.toLocaleString()}</div>
+                <div style={{ fontSize: 12, opacity: 0.75, marginTop: 6 }}>tracks played</div>
               </Tile>
-              <Tile bg={p.mint} fg={PASTEL_INK} delay={0.4}>
+              <Tile bg={p.mint} fg={PASTEL_INK} delay={0.4} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                 <Label icon={Sparkles} text="Unique Artists" mute={PASTEL_INK_SOFT} />
-                <div style={{ marginTop: 10, fontSize: 'clamp(24px, 3vw, 44px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueArtists?.toLocaleString()}</div>
-                <div style={{ fontSize: 11, color: PASTEL_INK_SOFT, marginTop: 6 }}>artists discovered</div>
+                <div style={{ marginTop: 10, fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{stats.uniqueArtists?.toLocaleString()}</div>
+                <div style={{ fontSize: 12, color: PASTEL_INK_SOFT, marginTop: 6 }}>artists discovered</div>
               </Tile>
               <Tile bg={p.accentDeep} fg="#fff" delay={0.45} className="span-2-cols">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
