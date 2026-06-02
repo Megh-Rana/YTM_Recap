@@ -8,6 +8,8 @@ import YearSelect from './YearSelect';
 import AutoFitText from './AutoFitText';
 import RecapPlayer from './RecapPlayer';
 import { fetchArtistPhoto } from '../utils/artistPhoto';
+import { getMoodProfile } from '../utils/moodEngine';
+import MoodCard from './MoodCard';
 import {
   filterByYear, getAvailableYears, getSummaryStats,
   getTopArtists, getTopSongs, getMonthlyBreakdown,
@@ -112,6 +114,8 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
   const MONTH_SHORT = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
   const mostReplayed = topSongs[0];
+
+  const moodData = useMemo(() => getMoodProfile(filtered), [filtered]);
 
   const [artistPhotos, setArtistPhotos] = useState({});
   useEffect(() => {
@@ -290,6 +294,13 @@ export default function RecapDashboard({ entries, durationMap, onReset }) {
                 </div>
               </Tile>
             </div>
+
+            {/* Mood */}
+            {moodData && (
+              <div className="col-12">
+                <MoodCard moodData={moodData} />
+              </div>
+            )}
 
             {/* Monthly */}
             <div className="col-12">
