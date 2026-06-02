@@ -1,19 +1,29 @@
-// Fetches artist photo: tries Wikipedia first, falls back to YouTube thumbnail.
 const cache = new Map();
 
-async function fetchWikipediaPhoto(artistName) {
-  const q = encodeURIComponent(artistName);
+// YouTube thumbnail (always reliable since it comes from actual listen history)
+export function ytThumb(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : null;
+}
+
+async function fetchWikipediaPhoto(query) {
+  const q = encodeURIComponent(query);
   const res = await fetch(
-    `https://en.wikipedia.org/w/api.php?action=query&titles=${q}&prop=pageimages&format=json&pithumbsize=200&origin=*`
+    `https://en.wikipedia.org/w/api.php?action=query&titles=${q}&prop=pageimages|categories&format=json&pithumbsize=300&origin=*`
   );
   const data = await res.json();
   const pages = data?.query?.pages ?? {};
   const page = Object.values(pages)[0];
-  return page?.thumbnail?.source ?? null;
-}
+  if (!page || page.missing !== undefined) return null;
 
-export function ytThumb(videoId) {
-  return videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : null;
+  // Reject if page has film/album/song categories (wrong result)
+  const cats = (page.categories ?? []).map(c => c.title.toLowerCase());
+  const isWrong = cats.some(c =>
+    c.includes('film') || c.includes('album') || c.includes('song') ||
+    c.includes('television') || c.includes('serial')
+  );
+  if (isWrong) return null;
+
+  return page?.thumbnail?.source ?? null;
 }
 
 export async function fetchArtistPhoto(artistName, fallbackVideoId = null) {
@@ -21,13 +31,14 @@ export async function fetchArtistPhoto(artistName, fallbackVideoId = null) {
 
   let url = null;
   try {
-    url = await fetchWikipediaPhoto(artistName);
+    // Try "Artist music" first (avoids film/show disambiguation)
+    url = await fetchWikipediaPhoto(artistName + ' music');
+    // If not found, try bare name
+    if (!url) url = await fetchWikipediaPhoto(artistName);
   } catch { /* ignore */ }
 
-  // Fall back to YouTube thumbnail of their most-played song
-  if (!url && fallbackVideoId) {
-    url = ytThumb(fallbackVideoId);
-  }
+  // Always fall back to YouTube thumbnail — guaranteed to be relevant
+  if (!url && fallbackVideoId) url = ytThumb(fallbackVideoId);
 
   cache.set(artistName, url);
   return url;

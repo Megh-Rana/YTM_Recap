@@ -19,14 +19,14 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
 
   return (
     <div style={{ minHeight: '100vh', width: '100%', background: p.bg, color: p.ink, ...sans }}>
-      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '20px 40px' }}>
-        <div style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(15px, 4vw, 20px)' }}>
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '16px 20px' }}>
+        <div style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(14px, 4vw, 20px)' }}>
           Youtube Music Recap
         </div>
         <ThemeToggle />
       </header>
 
-      <main style={{ padding: '0 40px 64px' }}>
+      <main style={{ padding: '0 16px 48px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Hero */}
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -66,7 +66,6 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
             }}
           >
             <div style={{ position: 'absolute', top: 20, left: 24, fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>DROP ZONE</div>
-            <div style={{ position: 'absolute', top: 20, right: 24, fontSize: 10, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>.ZIP · UP TO 2GB</div>
 
             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '64px 24px' }}>
               {isProcessing ? (
@@ -109,7 +108,7 @@ export default function LandingPage({ onFileSelected, isProcessing, progress }) 
               <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.22em', color: p.inkMute }}>HOW TO GET YOUR FILE</div>
               <div style={{ flex: 1, height: 1, background: p.border, opacity: 0.15 }} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
               {[
                 { n: '01', t: 'Visit Google Takeout', d: 'Go to takeout.google.com and sign in.', c: p.pink },
                 { n: '02', t: 'Select YouTube & export JSON', d: 'Deselect everything else. Choose JSON as the format — not HTML.', c: p.mint, icon: FileJson },

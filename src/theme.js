@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
 
 export const lightPalette = {
-  bg: '#FEFDCA',
-  bgAlt: '#F7F4B8',
+  bg: 'rgb(254, 253, 202)',
+  bgAlt: 'rgb(247, 244, 184)',
   ink: '#1F1A2E',
   inkSoft: '#5A5468',
   inkMute: '#8C8898',
@@ -10,7 +10,7 @@ export const lightPalette = {
   border: '#1F1A2E',
   shadow: 'rgba(31,26,46,0.10)',
   pink: '#FFCFDF',
-  cream: '#FEFDCA',
+  cream: 'rgb(254, 253, 202)',
   mint: '#E0F9B5',
   aqua: '#A5DEE5',
   accentDeep: '#E94B7B',
